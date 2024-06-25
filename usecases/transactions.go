@@ -20,6 +20,10 @@ const (
 	dateFormat     = "02/01/2006"
 )
 
+var (
+	gocsvUnmarshalMultipartFile = gocsv.UnmarshalMultipartFile
+)
+
 type TransactionUsecase struct {
 }
 
@@ -44,8 +48,8 @@ func convertCurrencyToFloat(currency string) (float64, error) {
 	return value, nil
 }
 
-func unmarshalCsvToStructForBankStatements(file *multipart.File) (result []*transactions.BankStatements, err error) {
-	err = gocsv.UnmarshalMultipartFile(file, &result)
+var unmarshalCsvToStructForBankStatements = func (file *multipart.File) (result []*transactions.BankStatements, err error) {
+	err = gocsvUnmarshalMultipartFile(file, &result)
 	if err != nil {
 		return nil, err
 	}
@@ -53,8 +57,8 @@ func unmarshalCsvToStructForBankStatements(file *multipart.File) (result []*tran
 }
 
 
-func unmarshalCsvToStructForSystemTransactions(file *multipart.File) (result []*transactions.SystemTransactions, err error) {
-	err = gocsv.UnmarshalMultipartFile(file, &result)
+var unmarshalCsvToStructForSystemTransactions = func (file *multipart.File) (result []*transactions.SystemTransactions, err error) {
+	err = gocsvUnmarshalMultipartFile(file, &result)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +66,7 @@ func unmarshalCsvToStructForSystemTransactions(file *multipart.File) (result []*
 }
 
 // function to validate bank statement data
-func validateBankStatementsData(data []*transactions.BankStatements) (err error) {
+var validateBankStatementsData = func(data []*transactions.BankStatements) (err error) {
 	for index, d := range data {
 		// convert string with currency to real amount
 		data[index].RealAmount, err = convertCurrencyToFloat(d.Amount)
@@ -88,7 +92,7 @@ func validateBankStatementsData(data []*transactions.BankStatements) (err error)
 		}
 
 		dataIDData := strings.Split(d.ID, "_")
-		if len(dataIDData) > 0 {
+		if len(dataIDData) == 2 {
 			data[index].BankSource = dataIDData[0]
 		} else {
 			return libError.NewBadRequestError("unique_identifier data in bank statements is invalid")
@@ -100,7 +104,7 @@ func validateBankStatementsData(data []*transactions.BankStatements) (err error)
 }
 
 // function to validate system transaction data
-func validateSystemTransactionsData(data []*transactions.SystemTransactions) (err error) {
+var validateSystemTransactionsData = func (data []*transactions.SystemTransactions) (err error) {
 	for index, d := range data {
 		// convert string with currency to real amount
 		data[index].RealAmount, err = convertCurrencyToFloat(d.Amount)
@@ -179,7 +183,6 @@ func (usecase TransactionUsecase) DoReconciliation(ctx context.Context, param tr
 	}
 	err = validateBankStatementsData(bankStatementsData)
 	if err != nil {
-
 		return result, err
 	}
 
@@ -205,7 +208,6 @@ func (usecase TransactionUsecase) DoReconciliation(ctx context.Context, param tr
 
 	// map for grouping missing bank statements data to each bank group
 	missingBankStatements := make(map[string][]transactions.BankStatements)
-
 
 	matchedBankStatements := map[string]bool{}
 	unmatchedBankStatements := 0
