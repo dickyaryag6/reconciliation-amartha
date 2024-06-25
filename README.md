@@ -42,3 +42,13 @@ MANDIRI_12346 | "Rp2,500,000" | 13/01/2024
 
 * amount or money have string data type in the code so the code could accept more than one currency, if there is any currency at all. Also to deal with formatting of money with two 0s behind the real number or with comma. If the amount or money value in csv is invalid or unknown, the code would return an error message that tells the user that the formatting is invalid
 
+* list of valid amount examples:
+
+amount |
+------ |
+Rp1,500,000.00
+1500000
+Rp1,500,000
+$1,500,000.00
+
+
