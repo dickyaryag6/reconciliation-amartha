@@ -16,7 +16,7 @@ func NewErrorMessage(status int, err error) *ErrorMessage {
 }
 
 func (e *ErrorMessage) Error() string {
-	return  e.ErrorDescription
+	return e.ErrorDescription
 }
 
 func SetInternalServerErrorForHandler(w http.ResponseWriter, errValue error) (err error) {

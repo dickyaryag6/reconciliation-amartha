@@ -14,7 +14,7 @@ func getRoutes(modules module) *chi.Mux {
 	router := chi.NewRouter()
 
 	router.Route("/", func(path chi.Router) {
-		path.Get("/reconciliation", modules.httpHandler.TransactionHandler.HandleReconciliation)
+		path.Post("/reconciliation", modules.httpHandler.TransactionHandler.HandleReconciliation)
 	})
 
 	return router
