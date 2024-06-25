@@ -3,7 +3,7 @@
 * In the code, i use port `8080`, you can change this accourding to your device, dont forget to also change the port in the code
 * Use curl or postman to run test
   ```
-  curl --location --request GET 'http://localhost:8000/reconciliation' \
+  curl --location --request POST 'http://localhost:8000/reconciliation' \
   --form 'system_transactions=@"/Users/dickyarya/Documents/amartha-test/system_transactions.csv"' \
   --form 'bank_statements=@"/Users/dickyarya/Documents/amartha-test/bank_statements.csv"' 
   ```
@@ -39,4 +39,6 @@ BCA_12348 | "-Rp7,000,000" | 12/01/2024
 MANDIRI_12345 | "Rp6,000,000" | 12/01/2024
 MANDIRI_12346 | "Rp1,500,000" | 13/01/2024
 MANDIRI_12346 | "Rp2,500,000" | 13/01/2024
+
+* amount or money have string data type in the code so the code could accept more than one currency, if there is any currency at all. Also to deal with formatting of money with two 0s behind the real number or with comma. If the amount or money value in csv is invalid or unknown, the code would return an error message that tells the user that the formatting is invalid
 
